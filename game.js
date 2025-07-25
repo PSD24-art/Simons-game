@@ -1,14 +1,16 @@
 let h2 = document.querySelector("h2");
+let h3 = document.querySelector("h3");
 let box = document.querySelectorAll(".box");
 let colors = ["yellow", "blue", "red", "green"];
 let level = 0;
 let started = false;
 let gameSeq = [];
 let userSeq = [];
+let highScore = 0;
+let body = document.querySelector("body");
 document.addEventListener("keypress", () => {
   if (started === false) {
     started = true;
-    console.log(started);
     levelUp();
   }
 });
@@ -16,7 +18,6 @@ document.addEventListener("keypress", () => {
 function levelUp() {
   userSeq = [];
   level++;
-  console.log("Level:", level);
   h2.innerText = `Level ${level}`;
   let randomIdx = Math.floor(Math.random() * 4);
   //   console.log("RandomIdx : ", randomIdx);
@@ -40,8 +41,6 @@ function btnPress() {
   flash(this);
   let userColor = this.id;
   userSeq.push(userColor);
-  console.log("User Sequence: ", userSeq);
-
   checkAns(userSeq.length - 1);
 }
 
@@ -52,12 +51,21 @@ for (let btn of box) {
 function checkAns(idx) {
   //   console.log(`Current Level: ${level}`);
   if (gameSeq[idx] === userSeq[idx]) {
-    console.log("Same value");
     if (userSeq.length == gameSeq.length) {
       setTimeout(levelUp, 1000);
     }
+    if (highScore < level && gameSeq[level - 1] === userSeq[level - 1]) {
+      highScore++;
+      h3.innerText = `Your High Score: ${highScore}`;
+      // console.log(highScore);
+    }
   } else {
     h2.innerText = `Game over! Press any key to start again.`;
+    document.querySelector("body").style.backgroundColor = "red";
+    setTimeout(() => {
+      document.querySelector("body").style.backgroundColor = "white";
+    }, 120);
+    // h3.innerHTML = `Your High Score: <b>${highScore}</b>`;
     reset();
   }
 }
